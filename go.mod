@@ -3,6 +3,7 @@ module github.com/ushieru/sqlirest
 go 1.20
 
 require (
+	github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/huandu/go-sqlbuilder v1.22.0

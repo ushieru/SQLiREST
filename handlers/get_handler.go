@@ -6,12 +6,16 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/huandu/go-sqlbuilder"
+	"github.com/ushieru/sqlirest/lua_integration"
 	"github.com/ushieru/sqlirest/utils"
 )
 
 func SetupGetHandler(app *fiber.App, db *sql.DB) {
 	app.Get("/:table", func(c *fiber.Ctx) error {
 		table := c.Params("table")
+		if res, err := lua_integration.CallExtention(table, db); err == nil {
+			return c.SendString(res)
+		}
 		selectParams := c.Query("select", "*")
 		queries := c.Queries()
 		selectParamsSlice := strings.Split(selectParams, ",")

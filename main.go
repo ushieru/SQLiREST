@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"github.com/ushieru/sqlirest/handlers"
+	"github.com/ushieru/sqlirest/lua_integration"
 	"github.com/ushieru/sqlirest/utils"
 )
 
@@ -26,6 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	lua_integration.GetExtentions()
 	utils.LoadSQL(sqlFile, db)
 
 	handlers.SetupGetHandler(app, db)
