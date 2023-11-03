@@ -3,6 +3,9 @@
 SQLiREST es un servidor web que convierte su base de datos SQLite3 directamente en una API REST.
 > Inspirado en PostgREST.
 
+## Descargar
+[![SQLiREST](https://img.shields.io/badge/Descargar%20SQLiREST-000000?style=for-the-badge)](https://github.com/ushieru/SQLiREST/releases)
+
 ## Run
 ```bash
 ./sqlirest
