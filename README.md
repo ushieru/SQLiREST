@@ -31,6 +31,19 @@ PORT=8081 # default -> 8080
 | neq  | <>       |
 | like | like     |
 
+## Lua
+Puedes agregar extenciones con lua para hacer consulas mas complejas mientras crece el proyecto.
+
+```lua
+-- extentions/test.lua
+return callRawQuery("select sqlite_version()")
+```
+
+```ruby
+GET http://localhost:8080/test
+```
+> [{"sqlite_version()":"3.41.2"}]
+
 ## Ejemplos
 
 [Books](./example/README.md)
