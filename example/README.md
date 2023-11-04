@@ -35,44 +35,44 @@ INSERT INTO books(name, author_id) VALUES
 
 ### Rest
 
-```
+```ruby
 GET http://localhost:8080/authors
 ```
 > [{"id":1,"name":"Octavio Paz"},{"id":2,"name":"Juan Rulfo"},{"id":3,"name":"Rosario Castellanos"}]
 
-```
+```ruby
 POST http://localhost:8080/authors
 { "name": "Valeria Luiselli" }
 ```
 > HTTP/1.1 201 Created
 
-```
+```ruby
 GET http://localhost:8080/authors?name=eq.Valeria%20Luiselli
 ```
 > [{"id":4,"name":"Valeria Luiselli"}]
 
-```
+```ruby
 GET http://localhost:8080/books
 ```
 > [{"author_id":1,"id":1,"name":"El laberinto de la soledad"},{"author_id":1,"id":2,"name":"Piedra de sol"},{"author_id":2,"id":3,"name":"Pedro Páramo"},{"author_id":2,"id":4,"name":"El llano en llamas"},{"author_id":3,"id":5,"name":"Balún Canán"},{"author_id":3,"id":6,"name":"Poesía no eres tú"}]
 
-```
+```ruby
 GET http://localhost:8080/books?select=id,name
 ```
 > [{"id":1,"name":"El laberinto de la soledad"},{"id":2,"name":"Piedra de sol"},{"id":3,"name":"Pedro Páramo"},{"id":4,"name":"El llano en llamas"},{"id":5,"name":"Balún Canán"},{"id":6,"name":"Poesía no eres tú"}]
 
-```
+```ruby
 GET http://localhost:8080/books?select=name,id&id=gt.4
 ```
 > [{"id":5,"name":"Balún Canán"},{"id":6,"name":"Poesía no eres tú"}]
 
-```
+```ruby
 PATCH http://localhost:8080/books?id=eq.5
 {"name": "Oficio de tinieblas"}
 ```
 > HTTP/1.1 200 OK
 
-```
+```ruby
 DELETE http://localhost:8080/books?id=eq.5
 ```
 > HTTP/1.1 200 OK
@@ -108,13 +108,13 @@ Llamalo con una peticion GET al nombre de tu archivo.
 
 > Ten cuidado con los nombres de tus extenciones. No uses palabras reservadas ni nombres muy complejos para el Query encode.
 
-```
+```ruby
 GET http://localhost:8080/test
 ```
 > [{"sqlite_version()":"3.41.2"}]
 
 
-```
+```ruby
 GET http://localhost:8080/inner_join_test
 ```
 > [{"author_id":1,"author_name":"Octavio Paz","book_id":1,"book_name":"El laberinto de la soledad"},{"author_id":1,"author_name":"Octavio Paz","book_id":2,"book_name":"Piedra de sol"},{"author_id":2,"author_name":"Juan Rulfo","book_id":3,"book_name":"Pedro Páramo"},{"author_id":2,"author_name":"Juan Rulfo","book_id":4,"book_name":"El llano en llamas"},{"author_id":3,"author_name":"Rosario Castellanos","book_id":5,"book_name":"Balún Canán"},{"author_id":3,"author_name":"Rosario Castellanos","book_id":6,"book_name":"Poesía no eres tú"}]
