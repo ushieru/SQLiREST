@@ -3,11 +3,12 @@ module github.com/ushieru/sqlirest
 go 1.20
 
 require (
-	github.com/yuin/gopher-lua v1.1.0
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/huandu/go-sqlbuilder v1.22.0
 	github.com/spf13/viper v1.17.0
+	github.com/yuin/gopher-lua v1.1.0
+	layeh.com/gopher-json v0.0.0-20201124131017-552bb3c4c3bf
 )
 
 require (
@@ -36,6 +37,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.50.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	github.com/yuin/gluamapper v0.0.0-20150323120927-d836955830e7 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
