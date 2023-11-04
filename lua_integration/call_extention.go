@@ -3,20 +3,29 @@ package lua_integration
 import (
 	"database/sql"
 	"errors"
+	"strings"
 
-	"github.com/Shopify/go-lua"
+	"github.com/yuin/gopher-lua"
 )
 
-func CallExtention(name string, db *sql.DB) (string, error) {
-	if val, isOk := Extentions[name]; isOk {
-		l := lua.NewState()
-		lua.OpenLibraries(l)
-		RegisterCallRawQuery(l, db)
-		if err := lua.DoFile(l, "./extentions/"+val); err != nil {
-			return "", err
+func CallExtention(name string, db *sql.DB) (*string, error) {
+	L := lua.NewState()
+	Loader(L, db)
+	if val, isOk := getExtentions()[name]; isOk {
+		if err := L.DoFile("./extentions/" + val); err != nil {
+			e := strings.Split(err.Error(), ":")
+			if len(e) == 4 {
+				return &e[3], nil
+			}
+			return nil, err
 		}
-		result, _ := l.ToString(-1)
-		return result, nil
+		lv := L.Get(-1)
+		lstr, ok := lv.(lua.LString)
+		if !ok {
+			return nil, errors.New("something wrong")
+		}
+		s := string(lstr)
+		return &s, nil
 	}
-	return "", errors.New("not found")
+	return nil, nil
 }

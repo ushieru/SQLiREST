@@ -5,16 +5,16 @@ import (
 	"strings"
 )
 
-var Extentions = make(map[string]string)
-
-func GetExtentions() {
+func getExtentions() map[string]string {
 	files, err := os.ReadDir("./extentions")
+	extentions := make(map[string]string)
 	if err != nil {
-		return
+		return nil
 	}
 	for _, file := range files {
 		fullName := file.Name()
 		name := strings.Split(fullName, ".")[0]
-		Extentions[name] = fullName
+		extentions[name] = fullName
 	}
+	return extentions
 }
