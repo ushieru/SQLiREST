@@ -13,8 +13,12 @@ import (
 func SetupGetHandler(app *fiber.App, db *sql.DB) {
 	app.Get("/:table", func(c *fiber.Ctx) error {
 		table := c.Params("table")
-		if res, err := lua_integration.CallExtention(table, db); err == nil {
-			return c.SendString(res)
+		res, err := lua_integration.CallExtention(table, db)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		if res != nil {
+			return c.SendString(*res)
 		}
 		selectParams := c.Query("select", "*")
 		queries := c.Queries()
