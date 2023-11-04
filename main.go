@@ -27,7 +27,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lua_integration.GetExtentions()
 	utils.LoadSQL(sqlFile, db)
 
 	handlers.SetupGetHandler(app, db)
