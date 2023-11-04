@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"github.com/ushieru/sqlirest/handlers"
-	"github.com/ushieru/sqlirest/lua_integration"
 	"github.com/ushieru/sqlirest/utils"
 )
 
