@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,15 +14,20 @@ import (
 func SetupGetHandler(app *fiber.App, db *sql.DB) {
 	app.Get("/:table", func(c *fiber.Ctx) error {
 		table := c.Params("table")
-		res, err := lua_integration.CallExtention(table, db)
+		queries := c.Queries()
+		args := make(map[string]any)
+		res, err := lua_integration.CallLuaScript("get", table, args, db)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		if res != nil {
-			return c.SendString(*res)
+			var v interface{}
+			if err := json.Unmarshal([]byte(*res), &v); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, "...")
+			}
+			return c.JSON(v)
 		}
 		selectParams := c.Query("select", "*")
-		queries := c.Queries()
 		selectParamsSlice := strings.Split(selectParams, ",")
 		sb := sqlbuilder.NewSelectBuilder()
 		sb.Select(selectParamsSlice...)

@@ -6,15 +6,27 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/huandu/go-sqlbuilder"
+	"github.com/ushieru/sqlirest/lua_integration"
 )
 
 func SetupPostHandler(app *fiber.App, db *sql.DB) {
 	app.Post("/:table", func(c *fiber.Ctx) error {
 		table := c.Params("table")
-		body := make(map[string]interface{})
+		body := make(map[string]any)
 		json.Unmarshal(c.Body(), &body)
+		res, err := lua_integration.CallLuaScript("post", table, body, db)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		if res != nil {
+			var v any
+			if err := json.Unmarshal([]byte(*res), &v); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, "...")
+			}
+			return c.JSON(v)
+		}
 		cols := make([]string, len(body))
-		values := make([]interface{}, len(body))
+		values := make([]any, len(body))
 		i := 0
 		for k, v := range body {
 			cols[i] = k
@@ -22,7 +34,10 @@ func SetupPostHandler(app *fiber.App, db *sql.DB) {
 			i++
 		}
 		sql, args := sqlbuilder.InsertInto(table).Cols(cols...).Values(values...).Build()
-		db.Exec(sql, args...)
+		_, err = db.Exec(sql, args...)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "resource no created")
+		}
 		return c.SendStatus(fiber.StatusCreated)
 	})
 }
