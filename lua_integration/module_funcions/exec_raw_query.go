@@ -6,7 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
-func ExecQuery(db *sql.DB) func(L *lua.LState) int {
+func ExecRawQuery(db *sql.DB) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
 		stm := L.ToString(1)
 		_, err := db.Exec(stm)
