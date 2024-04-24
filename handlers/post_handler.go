@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/huandu/go-sqlbuilder"
@@ -14,10 +15,7 @@ func SetupPostHandler(app *fiber.App, db *sql.DB) {
 		table := c.Params("table")
 		body := make(map[string]any)
 		json.Unmarshal(c.Body(), &body)
-		res, err := lua_integration.CallLuaScript("post", table, body, db)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
+		res, _ := lua_integration.CallLuaScript("post", table, body, db)
 		if res != nil {
 			var v any
 			if err := json.Unmarshal([]byte(*res), &v); err != nil {
@@ -34,9 +32,10 @@ func SetupPostHandler(app *fiber.App, db *sql.DB) {
 			i++
 		}
 		sql, args := sqlbuilder.InsertInto(table).Cols(cols...).Values(values...).Build()
-		_, err = db.Exec(sql, args...)
+		_, err := db.Exec(sql, args...)
 		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "resource no created")
+			log.Default().Printf(err.Error())
+			return fiber.NewError(fiber.StatusNotFound, "Not Found")
 		}
 		return c.SendStatus(fiber.StatusCreated)
 	})

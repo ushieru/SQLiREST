@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,10 +17,7 @@ func SetupGetHandler(app *fiber.App, db *sql.DB) {
 		table := c.Params("table")
 		queries := c.Queries()
 		args := make(map[string]any)
-		res, err := lua_integration.CallLuaScript("get", table, args, db)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
+		res, _ := lua_integration.CallLuaScript("get", table, args, db)
 		if res != nil {
 			var v interface{}
 			if err := json.Unmarshal([]byte(*res), &v); err != nil {
@@ -38,7 +36,8 @@ func SetupGetHandler(app *fiber.App, db *sql.DB) {
 		sql, params := sb.Build()
 		rows, err := db.Query(sql, params...)
 		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+			log.Default().Printf(err.Error())
+			return fiber.NewError(fiber.StatusNotFound, "Not Found")
 		}
 		maps, err := utils.SQLRowsToMaps(rows)
 		if err != nil {
