@@ -2,28 +2,19 @@ package lua_integration
 
 import (
 	"os"
-	"strings"
+	"path/filepath"
 )
 
-func getLuaScripts(method string) map[string]string {
-	files, err := os.ReadDir("./scripts")
-	extentions := make(map[string]string)
+func getLuaScript(method string, name string) (string, error) {
+	extentionPath := filepath.Join("srv", method+"."+name+".lua")
+	file, err := os.ReadFile(extentionPath)
 	if err != nil {
-		return nil
-	}
-	for _, file := range files {
-		fullName := file.Name()
-		nameSplit := strings.Split(fullName, ".")
-		if len(nameSplit) == 3 {
-			methodScript := nameSplit[0]
-			if methodScript != method {
-				continue
-			}
-			name := nameSplit[1]
-			extentions[name] = fullName
+		path := filepath.Join("srv", name+".lua")
+		file, err = os.ReadFile(path)
+		if err == nil {
+			return string(file), nil
 		}
-		name := nameSplit[0]
-		extentions[name] = fullName
+		return "", err
 	}
-	return extentions
+	return string(file), nil
 }
